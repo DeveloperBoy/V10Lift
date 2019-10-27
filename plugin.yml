@@ -1,0 +1,21 @@
+name: V10Lift
+main: de.V10lator.V10lift.V10lift
+version: 0.4.14
+softdepend: [V10verlap]
+commands:
+  v10lift:
+    description: V10Lift commands
+    usage: /<command> help
+permissions:
+  v10lift.build:
+    description: Build your own lifts!
+    default: true
+  v10lift.repair:
+    description: Repair V10lifts
+    default: op
+  v10lift.repair.master:
+    description: Repair V10lifts with commands
+    default: op
+  v10lift.admin:
+    description: Administrate V10lift
+    default: op
