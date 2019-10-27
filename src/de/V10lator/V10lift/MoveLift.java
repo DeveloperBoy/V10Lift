@@ -1,14 +1,10 @@
 package de.V10lator.V10lift;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.function.Supplier;
-
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -33,7 +29,7 @@ class MoveLift implements Runnable {
     private final int ft;
     private final String ln;
     
-    private final Method[] methods = ((Supplier<Method[]>) () -> {
+    /*private final Method[] methods = ((Supplier<Method[]>) () -> {
 	    try {
 	        Method getHandle = Class.forName(Bukkit.getServer().getClass().getPackage().getName() + ".entity.CraftEntity").getDeclaredMethod("getHandle");
 	        return new Method[] {
@@ -42,7 +38,7 @@ class MoveLift implements Runnable {
 	    } catch (Exception ex) {
 	        return null;
 	    }
-	}).get();
+	}).get();*/
 
     MoveLift(V10lift plugin, String ln, long speed) {
         this.plugin = plugin;
@@ -327,11 +323,7 @@ class MoveLift implements Runnable {
                             }
                         } else {
                         	//NO V10Overlap
-                        	try {
-                        	    methods[1].invoke(methods[0].invoke(ent), loc.getX(), loc.getY(), loc.getZ(), loc.getYaw(), loc.getPitch());
-                        	} catch (Exception ex) {
-                        	    Bukkit.getLogger().severe("[" + plugin.getName() + "] Method not found exception in MoveLift class!");
-                        	}
+                        	ent.teleport(loc);
                         }
                     }
                 }
