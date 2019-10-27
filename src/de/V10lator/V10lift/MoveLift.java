@@ -330,7 +330,7 @@ class MoveLift implements Runnable {
                         	try {
                         	    methods[1].invoke(methods[0].invoke(ent), loc.getX(), loc.getY(), loc.getZ(), loc.getYaw(), loc.getPitch());
                         	} catch (Exception ex) {
-                        	    Bukkit.getLogger().severe("[APLIFT] Method not found exception in MoveLift class!");
+                        	    Bukkit.getLogger().severe("[" + plugin.getName() + "] Method not found exception in MoveLift class!");
                         	}
                         }
                     }

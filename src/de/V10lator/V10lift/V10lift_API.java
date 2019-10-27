@@ -201,16 +201,16 @@ public class V10lift_API {
         if (lift == null ||
             !plugin.lifts.containsKey(lift) ||
             floor == null) {
-        	Bukkit.getLogger().severe("[" + plugin.getName() + " Debug] De lift bestaat niet!");
+        	Bukkit.getLogger().severe("[" + plugin.getName() + " Debug] That lift doesn't exists.");
             return false;
         }
         Lift l = plugin.lifts.get(lift);
         if (l.queue == null) 
             l.queue = new LinkedHashMap < String, Floor > ();
         if (!l.queue.containsValue(floor)) {
-        	Bukkit.getLogger().severe("[" + plugin.getName() + " Debug] De lift navigeert nog niet naar die verdieping!");
+        	Bukkit.getLogger().severe("[" + plugin.getName() + " Debug] The elevator doesn't navigate to that floor yet!");
             if (floorName == null) {
-            	Bukkit.getLogger().severe("[" + plugin.getName() + " Debug] De vloernaam is null!");
+            	Bukkit.getLogger().severe("[" + plugin.getName() + " Debug] The floor name is null!");
                 floorName = ChatColor.MAGIC + "-----";
                 for (Entry < String, Floor > e: plugin.lifts.get(lift).floors.entrySet())
                     if (e.getValue().equals(floor)) {
@@ -220,9 +220,9 @@ public class V10lift_API {
                     }
             }
             l.queue.put(floorName, floor);
-            Bukkit.getLogger().severe("[" + plugin.getName() + " Debug] De lift heeft nu de queue ontvangen!");
+            Bukkit.getLogger().severe("[" + plugin.getName() + " Debug] The elevator has now received the queue!");
             startLift(lift);
-            Bukkit.getLogger().severe("[" + plugin.getName() + " Debug] De lift is gestart!");
+            Bukkit.getLogger().severe("[" + plugin.getName() + " Debug] The elevator is started!");
             return true;
         }
         return false;
@@ -378,7 +378,7 @@ public class V10lift_API {
                 }
                 BlockState bs = server.getWorld(ls.world).getBlockAt(ls.x, ls.y, ls.z).getState();
                 if (!(bs instanceof Sign)) {
-                    server.getLogger().info("[" + plugin.getName() + "] Verkeerde sign verwijderd op: " + ls.x + ", " + ls.y + ", " + ls.z + " in world " + ls.world);
+                    server.getLogger().info("[" + plugin.getName() + "] Wrong sign removed at: " + ls.x + ", " + ls.y + ", " + ls.z + " in world " + ls.world);
                     liter.remove();
                     return;
                 }
@@ -404,7 +404,7 @@ public class V10lift_API {
                     ls = liter.next();
                     bs = plugin.getServer().getWorld(ls.world).getBlockAt(ls.x, ls.y, ls.z).getState();
                     if (!(bs instanceof Sign)) {
-                        plugin.getServer().getLogger().info("[" + plugin.getName() + "] Verkeerde sign verwijderd op: " + ls.x + ", " + ls.y + ", " + ls.z + " in world " + ls.world);
+                        plugin.getServer().getLogger().info("[" + plugin.getName() + "] Wrong sign removed at: " + ls.x + ", " + ls.y + ", " + ls.z + " in world " + ls.world);
                         liter.remove();
                         continue;
                     }
@@ -452,20 +452,20 @@ public class V10lift_API {
                     sign = (Sign) bs;
                     if (!sign.getLine(0).equalsIgnoreCase(plugin.signText))
                         continue;
-                    sign.setLine(3, ChatColor.RED + "Uitgeschakeld");
+                    sign.setLine(3, ChatColor.RED + "Disabled");
                     sign.update();
                 }
                 while (liter.hasNext()) {
                     LiftSign ls = liter.next();
                     bs = s.getWorld(ls.world).getBlockAt(ls.x, ls.y, ls.z).getState();
                     if (!(bs instanceof Sign)) {
-                        s.getLogger().info("[" + plugin.getName() + "] Verkeerde sign verwijderd op: " + ls.x + ", " + ls.y + ", " + ls.z + " in world " + ls.world);
+                        s.getLogger().info("[" + plugin.getName() + "] Wrong sign removed at: " + ls.x + ", " + ls.y + ", " + ls.z + " in world " + ls.world);
                         liter.remove();
                         continue;
                     }
                     sign = (Sign) bs;
                     ls.oldText = sign.getLine(3);
-                    sign.setLine(3, ChatColor.RED + "Uitgeschakeld");
+                    sign.setLine(3, ChatColor.RED + "Disabled");
                     sign.update();
                 }
             } else {
@@ -483,7 +483,7 @@ public class V10lift_API {
                     LiftSign ls = liter.next();
                     bs = s.getWorld(ls.world).getBlockAt(ls.x, ls.y, ls.z).getState();
                     if (!(bs instanceof Sign)) {
-                        s.getLogger().info("[" + plugin.getName() + "] Verkeerde sign verwijderd op: " + ls.x + ", " + ls.y + ", " + ls.z + " in world " + ls.world);
+                        s.getLogger().info("[" + plugin.getName() + "] Wrong sign removed on: " + ls.x + ", " + ls.y + ", " + ls.z + " in world " + ls.world);
                         liter.remove();
                         continue;
                     }
@@ -768,7 +768,7 @@ public class V10lift_API {
                 continue;
             }
             if (plugin.v10vAPI == null) {
-                plugin.getLogger().info("[" + plugin.getName() + "] Multiwereld lift gevonden, maar V10verlap is niet geinstalleerd!");
+                plugin.getLogger().info("[" + plugin.getName() + "] Multiworld lift found, but V10verlap is not installed!");
                 plugin.getServer().getPluginManager().disablePlugin(plugin);
                 return false;
             }
@@ -833,7 +833,7 @@ public class V10lift_API {
                 continue;
             }
             if (plugin.v10vAPI == null) {
-                plugin.getLogger().info("[" + plugin.getName() + "] Multiwereld lift gevonden, maar V10verlap is niet geinstalleerd!");
+                plugin.getLogger().info("[" + plugin.getName() + "] Multiworld lift found, but V10verlap is not installed!");
                 plugin.getServer().getPluginManager().disablePlugin(plugin);
                 return false;
             }
@@ -957,12 +957,12 @@ public class V10lift_API {
 
     void startLift(String lift) {
         if (!plugin.movingTasks.containsKey(lift)) {
-        	Bukkit.getLogger().severe("[" + plugin.getName() + " Debug] De lift bevat die movetaak niet!");
+        	Bukkit.getLogger().severe("[" + plugin.getName() + " Debug] The elevator doesn't contain that movingtask!");
             Lift l = plugin.lifts.get(lift);
             plugin.movingTasks.put(lift,
                 plugin.getServer().getScheduler().scheduleSyncRepeatingTask(plugin,
                     new MoveLift(plugin, lift, l.speed), l.speed, l.speed));
-            Bukkit.getLogger().severe("[" + plugin.getName() + " Debug] De lift is ook succesvol gestart!");
+            Bukkit.getLogger().severe("[" + plugin.getName() + " Debug] The lift has also started successfully!");
         }
     }
 
@@ -972,25 +972,25 @@ public class V10lift_API {
 
     void sendLiftInfo(Player player, String l, Lift lift) {
         if (!lift.owners.contains(player.getName()) && !plugin.hasPerm(player, "v10lift.admin"))
-            player.sendMessage(ChatColor.RED + "Jij mag deze lift niet checken!");
+            player.sendMessage(ChatColor.RED + "You can't check this elevator!");
         else {
-            player.sendMessage(ChatColor.GOLD + "Lift: " + ChatColor.YELLOW + l);
-            player.sendMessage(ChatColor.GOLD + "Instellingen:");
-            player.sendMessage(ChatColor.GREEN + "  Snelheid: " + ChatColor.YELLOW + lift.speed);
-            player.sendMessage(ChatColor.GREEN + "  Realistische Modus: " + ChatColor.YELLOW + lift.realistic);
-            player.sendMessage(ChatColor.GREEN + "  Defect: " + ChatColor.YELLOW + plugin.api.isDefective(l));
-            player.sendMessage(ChatColor.GOLD + "Verdiepingen:");
+            player.sendMessage(ChatColor.GOLD + "Elevator: " + ChatColor.YELLOW + l);
+            player.sendMessage(ChatColor.GOLD + "Settings:");
+            player.sendMessage(ChatColor.GREEN + "  Speed: " + ChatColor.YELLOW + lift.speed);
+            player.sendMessage(ChatColor.GREEN + "  Realistic Mode: " + ChatColor.YELLOW + lift.realistic);
+            player.sendMessage(ChatColor.GREEN + "  Malfunction: " + ChatColor.YELLOW + plugin.api.isDefective(l));
+            player.sendMessage(ChatColor.GOLD + "Floors:");
             if (lift.floors.isEmpty())
-                player.sendMessage(ChatColor.RED + "Geen.");
+                player.sendMessage(ChatColor.RED + "None.");
             else {
                 for (Entry < String, Floor > entry: lift.floors.entrySet()) {
                     player.sendMessage(ChatColor.GREEN + "  " + entry.getKey() + ":");
                     Floor f = entry.getValue();
-                    player.sendMessage(ChatColor.YELLOW + "    Wereld: " + ChatColor.GREEN + f.world);
-                    player.sendMessage(ChatColor.YELLOW + "    Hoogte: " + ChatColor.GREEN + f.y);
+                    player.sendMessage(ChatColor.YELLOW + "    World: " + ChatColor.GREEN + f.world);
+                    player.sendMessage(ChatColor.YELLOW + "    Height: " + ChatColor.GREEN + f.y);
                     player.sendMessage(ChatColor.YELLOW + "    Whitelist:");
                     if (f.whitelist.isEmpty())
-                        player.sendMessage(ChatColor.GOLD + "      Geen.");
+                        player.sendMessage(ChatColor.GOLD + "      None.");
                     else {
                         ChatColor color = ChatColor.DARK_PURPLE;
                         Iterator < String > iter = f.whitelist.iterator();

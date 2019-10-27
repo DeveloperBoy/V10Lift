@@ -39,7 +39,7 @@ class VLCE implements CommandExecutor {
         String[] args) {
         if (!plugin.hasPerm(sender, "v10lift.build") &&
             !plugin.hasPerm(sender, "v10lift.admin")) {
-            sender.sendMessage(ChatColor.RED + "Jij mag dit niet doen!");
+            sender.sendMessage(ChatColor.RED + "You can't do this!");
             return true;
         }
         if (args.length < 1) {
@@ -51,12 +51,12 @@ class VLCE implements CommandExecutor {
             String player = ((Player) sender).getName();
             if (plugin.builds.containsKey(player)) {
                 if (args.length < 2) {
-                    sender.sendMessage(ChatColor.RED + "De lift heeft een naam nodig!");
+                    sender.sendMessage(ChatColor.RED + "The elevator needs a name!");
                     return true;
                 }
                 HashSet < LiftBlock > blocks = plugin.builds.get(player);
                 if (blocks.isEmpty()) {
-                    sender.sendMessage(ChatColor.RED + "Voeg eerst blokken toe!");
+                    sender.sendMessage(ChatColor.RED + "Add blocks first!");
                     return true;
                 }
                 StringBuilder sb = new StringBuilder(args[1]);
@@ -69,24 +69,24 @@ class VLCE implements CommandExecutor {
                     sb.delete(16, l);
                 String lift = sb.toString().trim();
                 if (!plugin.api.createNewLift(player, lift))
-                    sender.sendMessage(ChatColor.RED + "Oeps! Deze naam bestaat al!");
+                    sender.sendMessage(ChatColor.RED + "Oops! This name already exists!");
                 TreeSet < LiftBlock > blcks = plugin.lifts.get(lift).blocks;
                 for (LiftBlock lb: blocks)
                     plugin.api.addBlockToLift(blcks, lb);
                 plugin.api.sortLiftBlocks(lift);
                 plugin.builds.remove(player);
-                sender.sendMessage(ChatColor.GREEN + "Lift \"" + ChatColor.YELLOW + lift + ChatColor.GREEN + "\" gemaakt!");
+                sender.sendMessage(ChatColor.GREEN + "Lift \"" + ChatColor.YELLOW + lift + ChatColor.GREEN + "\" made!");
                 ((Player) sender).performCommand("v10lift edit " + lift);
             } else {
                 plugin.builds.put(player, new HashSet < LiftBlock > ());
-                sender.sendMessage(ChatColor.GOLD + "Ok, voeg nu alle blokken van de cabine toe door met rechtermuisknop op de blokken te drukken.");
-                sender.sendMessage(ChatColor.GOLD + "Typ dan: /v10lift create <NAAM>");
+                sender.sendMessage(ChatColor.GOLD + "Okay, now add all the blocks from the cab by right-clicking on the blocks.");
+                sender.sendMessage(ChatColor.GOLD + "Then type: /v10lift create <NAAM>");
             }
             //PLAYERS ONLY
         } else if (args[0].equalsIgnoreCase("offlinefix")) {
             String player = ((Player) sender).getName();
             if (!plugin.editors.containsKey(player)) {
-                sender.sendMessage(ChatColor.RED + "Start editor modus eerst!");
+                sender.sendMessage(ChatColor.RED + "Start editor mode first!");
                 return true;
             }
             Lift lift = plugin.lifts.get(plugin.editors.get(player));
@@ -94,7 +94,7 @@ class VLCE implements CommandExecutor {
             for (LiftBlock lb: lift.offlineInputs) {
                 lb.active = false;
                 plugin.api.setOffline(plugin.editors.get(player), lb.active);
-                Bukkit.getLogger().severe("[" + plugin.getName() + " Debug] De speler heeft de lift op niet-offline gezet!");
+                Bukkit.getLogger().severe("[" + plugin.getName() + " Debug] The player has put the lift on non-offline!");
             }
             //PLAYERS ONLY
         } else if (args[0].equalsIgnoreCase("delete")) {
@@ -108,15 +108,15 @@ class VLCE implements CommandExecutor {
                 sb.append(" ").append(args[i]);
             String lift = sb.toString();
             if (!plugin.lifts.containsKey(lift)) {
-                sender.sendMessage(ChatColor.RED + "Lift \"" + ChatColor.YELLOW + lift + ChatColor.RED + "\" bestaat niet!");
+                sender.sendMessage(ChatColor.RED + "Lift \"" + ChatColor.YELLOW + lift + ChatColor.RED + "\" doesn't exists!");
                 return true;
             }
             if (!plugin.lifts.get(lift).owners.contains(player) && !plugin.hasPerm(sender, "v10lift.admin")) {
-                sender.sendMessage(ChatColor.RED + "Jij bent niet de eigenaar van die lift!");
+                sender.sendMessage(ChatColor.RED + "You don't own that elevator!");
                 return true;
             }
             plugin.api.removeLift(lift);
-            sender.sendMessage(ChatColor.GOLD + "Lift verwijderd.");
+            sender.sendMessage(ChatColor.GOLD + "Lift removed.");
         } else if (args[0].equalsIgnoreCase("start")) {
             // /aplift start <NAAM> <Verdieping>
             if (args.length < 3) {
@@ -125,21 +125,21 @@ class VLCE implements CommandExecutor {
             }
 
             if (!plugin.lifts.containsKey(args[1])) {
-                Bukkit.getLogger().severe("[" + plugin.getName() + " Debug] De lift bestaat niet!");
+                Bukkit.getLogger().severe("[" + plugin.getName() + " Debug] The elevator doesn't exist!");
                 return false;
             }
 
             Lift l = plugin.lifts.get(args[1]);
 
             if (!l.floors.containsKey(args[2])) {
-                Bukkit.getLogger().severe("[" + plugin.getName() + " Debug] De vloer van de lift bestaat niet!");
+                Bukkit.getLogger().severe("[" + plugin.getName() + " Debug] The floor of the elevator doesn't exist!");
                 return false;
             }
 
             Floor f = l.floors.get(args[2]);
 
             plugin.api.addToQueue(args[1], f, args[2]);
-            sender.sendMessage(ChatColor.GOLD + "Lift gestart.");
+            sender.sendMessage(ChatColor.GOLD + "Lift started.");
         } else if (args[0].equalsIgnoreCase("setspeed")) {
             // /aplift setspeed <NAAM> <SPEED>
             if (args.length < 3) {
@@ -148,7 +148,7 @@ class VLCE implements CommandExecutor {
             }
 
             if (!plugin.lifts.containsKey(args[1])) {
-                Bukkit.getLogger().severe("[" + plugin.getName() + " Debug] De lift bestaat niet!");
+                Bukkit.getLogger().severe("[" + plugin.getName() + " Debug] The elevator doesn't exist!");
                 return false;
             }
 
@@ -157,10 +157,10 @@ class VLCE implements CommandExecutor {
             try {
                 l.speed = Integer.valueOf(args[2]);
             } catch (NumberFormatException ex) {
-                Bukkit.getLogger().severe("[" + plugin.getName() + " Debug] Die speed is geen getal!");
+                Bukkit.getLogger().severe("[" + plugin.getName() + " Debug] That speed is not a number!");
                 return false;
             }
-            sender.sendMessage(ChatColor.GOLD + "Lift speed aangepast.");
+            sender.sendMessage(ChatColor.GOLD + "Elevator speed adjusted.");
         } else if (args[0].equalsIgnoreCase("stop")) {
             // /aplift stop <NAAM>
             if (args.length < 2) {
@@ -169,7 +169,7 @@ class VLCE implements CommandExecutor {
             }
 
             if (!plugin.lifts.containsKey(args[1])) {
-                Bukkit.getLogger().severe("[" + plugin.getName() + " Debug] De lift bestaat niet!");
+                Bukkit.getLogger().severe("[" + plugin.getName() + " Debug] The elevator doesn't exist!");
                 return false;
             }
 
@@ -180,7 +180,7 @@ class VLCE implements CommandExecutor {
             }
 
             if (plugin.movingTasks.get(args[1]) == null) {
-                Bukkit.getLogger().severe("[" + plugin.getName() + " Debug] De lift bevat geen moving tasks!");
+                Bukkit.getLogger().severe("[" + plugin.getName() + " Debug] The elevator contains no moving tasks!");
                 return false;
             }
 
@@ -188,7 +188,7 @@ class VLCE implements CommandExecutor {
 
             plugin.movingTasks.remove(args[1]);
 
-            sender.sendMessage(ChatColor.GOLD + "Lift gestopt.");
+            sender.sendMessage(ChatColor.GOLD + "Lift stopped.");
             //PLAYERS ONLY
         } else if (args[0].equalsIgnoreCase("abort")) {
             String player = ((Player) sender).getName();
@@ -236,9 +236,9 @@ class VLCE implements CommandExecutor {
                 abort = true;
             }
             if (abort)
-                sender.sendMessage(ChatColor.GOLD + "Geannuleerd.");
+                sender.sendMessage(ChatColor.GOLD + "Cancelled.");
             else
-                sender.sendMessage(ChatColor.RED + "Oeps! Je kunt niks annuleren.");
+                sender.sendMessage(ChatColor.RED + "Oops! You can't cancel anything.");
             //PLAYERS ONLY
         } else if (args[0].equalsIgnoreCase("edit")) {
             String player = ((Player) sender).getName();
@@ -250,7 +250,7 @@ class VLCE implements CommandExecutor {
                 String lift = plugin.editors.get(player);
                 if (!plugin.lifts.containsKey(lift)) {
                     plugin.editors.remove(player);
-                    sender.sendMessage(ChatColor.RED + "Lift niet gevonden!");
+                    sender.sendMessage(ChatColor.RED + "Lift not found!");
                     return true;
                 }
                 Lift li = plugin.lifts.get(lift);
@@ -284,7 +284,7 @@ class VLCE implements CommandExecutor {
                     LiftSign ls = liter.next();
                     bs = s.getWorld(ls.world).getBlockAt(ls.x, ls.y, ls.z).getState();
                     if (!(bs instanceof Sign)) {
-                        s.getLogger().info("[" + plugin.getName() + "] Verkeerde sign verwijderd op: " + ls.x + ", " + ls.y + ", " + ls.z + " in world " + ls.world);
+                        s.getLogger().info("[" + plugin.getName() + "] Wrong sign removed on: " + ls.x + ", " + ls.y + ", " + ls.z + " in world " + ls.world);
                         liter.remove();
                         continue;
                     }
@@ -293,10 +293,10 @@ class VLCE implements CommandExecutor {
                     sign.update();
                     ls.oldText = null;
                 }
-                sender.sendMessage(ChatColor.GOLD + "Editor uitgezet!");
+                sender.sendMessage(ChatColor.GOLD + "Editor turned off!");
                 return true;
             } else if (plugin.editors.containsKey(player)) {
-                sender.sendMessage(ChatColor.RED + "Oeps! Je bent nog in editor modus!");
+                sender.sendMessage(ChatColor.RED + "Oops! You are still in editor mode!");
                 return true;
             }
             StringBuilder sb = new StringBuilder(args[1]);
@@ -306,12 +306,12 @@ class VLCE implements CommandExecutor {
             }
             String lift = sb.toString();
             if (!plugin.lifts.containsKey(lift)) {
-                sender.sendMessage(ChatColor.RED + "Lift \"" + ChatColor.YELLOW + lift + ChatColor.RED + "\" bestaat niet!");
+                sender.sendMessage(ChatColor.RED + "Lift \"" + ChatColor.YELLOW + lift + ChatColor.RED + "\" doesn't exists!");
                 return true;
             }
             Lift li = plugin.lifts.get(lift);
             if (!li.owners.contains(player) && !plugin.hasPerm(sender, "v10lift.admin")) {
-                sender.sendMessage(ChatColor.RED + "Jij bent niet de eigenaar van deze lift!");
+                sender.sendMessage(ChatColor.RED + "You're not the owner of this elevator!");
                 return true;
             }
             plugin.editors.put(player, lift);
@@ -325,7 +325,7 @@ class VLCE implements CommandExecutor {
                 sign = (Sign) bs;
                 if (!sign.getLine(0).equalsIgnoreCase(plugin.signText))
                     continue;
-                sign.setLine(3, ChatColor.RED + "Onderhoud");
+                sign.setLine(3, ChatColor.RED + "Maintenance");
                 sign.update();
             }
             Iterator < LiftSign > liter = li.signs.iterator();
@@ -333,25 +333,25 @@ class VLCE implements CommandExecutor {
                 LiftSign ls = liter.next();
                 bs = s.getWorld(ls.world).getBlockAt(ls.x, ls.y, ls.z).getState();
                 if (!(bs instanceof Sign)) {
-                    s.getLogger().info("[" + plugin.getName() + "] Verkeerde sign verwijderd op: " + ls.x + ", " + ls.y + ", " + ls.z + " in wereld " + ls.world);
+                    s.getLogger().info("[" + plugin.getName() + "] Wrong sign removed on: " + ls.x + ", " + ls.y + ", " + ls.z + " in wereld " + ls.world);
                     liter.remove();
                     continue;
                 }
                 sign = (Sign) bs;
                 ls.oldText = sign.getLine(3);
-                sign.setLine(3, ChatColor.RED + "Onderhoud");
+                sign.setLine(3, ChatColor.RED + "Maintenance");
                 sign.update();
             }
-            sender.sendMessage(ChatColor.GREEN + "Editor aangezet!");
+            sender.sendMessage(ChatColor.GREEN + "Editor turned on!");
             //PLAYERS ONLY
         } else if (args[0].equalsIgnoreCase("floor")) {
             String player = ((Player) sender).getName();
             if (!plugin.editors.containsKey(player)) {
-                sender.sendMessage(ChatColor.RED + "Zet eerst de editor modus aan!");
+                sender.sendMessage(ChatColor.RED + "First switch on the editor mode!");
                 return true;
             }
             if (args.length < 3) {
-                sender.sendMessage(ChatColor.RED + "Geen vloernaam opgegeven!");
+                sender.sendMessage(ChatColor.RED + "No floor name given!");
                 sendHelp(sender, "floor");
                 return true;
             }
@@ -367,11 +367,11 @@ class VLCE implements CommandExecutor {
 
                 int ret = plugin.api.addNewFloor(lift, floor, new Floor(b.getY() - 1, b.getWorld().getName()));
                 if (ret == 0)
-                    sender.sendMessage(ChatColor.GREEN + "Vloer \"" + ChatColor.YELLOW + floor + ChatColor.GREEN + "\" aangemaakt!");
+                    sender.sendMessage(ChatColor.GREEN + "Floor \"" + ChatColor.YELLOW + floor + ChatColor.GREEN + "\" created!");
                 else if (ret == -2)
-                    sender.sendMessage(ChatColor.RED + "Je kunt niet 2 vloeren met dezelfde naam aanmaken!");
+                    sender.sendMessage(ChatColor.RED + "You can't create 2 floors with the same name!");
                 else if (ret == -3)
-                    sender.sendMessage(ChatColor.RED + "Je kunt niet 2 vloeren op dezelfde hoogte aanmaken!");
+                    sender.sendMessage(ChatColor.RED + "You can't make 2 floors at the same height!");
                 else
                     sender.sendMessage(ChatColor.RED + "Internal error!");
             } else if (args[1].equalsIgnoreCase("del")) {
@@ -381,12 +381,12 @@ class VLCE implements CommandExecutor {
                     sb.append(args[i]);
                 }
                 if (plugin.api.removeFloor(lift, sb.toString()))
-                    sender.sendMessage(ChatColor.GOLD + "Vloer verwijderd!");
+                    sender.sendMessage(ChatColor.GOLD + "Floor removed!");
                 else
-                    sender.sendMessage(ChatColor.RED + "Vloer \"" + ChatColor.YELLOW + sb.toString() + ChatColor.RED + "\" niet gevonden!");
+                    sender.sendMessage(ChatColor.RED + "Floor \"" + ChatColor.YELLOW + sb.toString() + ChatColor.RED + "\" not found!");
             } else if (args[1].equalsIgnoreCase("rename")) {
                 if (args.length < 4) {
-                    sender.sendMessage(ChatColor.RED + "Geen vloernaam opgegeven!");
+                    sender.sendMessage(ChatColor.RED + "No floor name given!");
                     sendHelp(sender, "floor");
                     return true;
                 }
@@ -399,12 +399,12 @@ class VLCE implements CommandExecutor {
                     floor = sb.toString();
                     i++;
                     if (i >= args.length) {
-                        sender.sendMessage(ChatColor.RED + "Vloer \"" + ChatColor.YELLOW + floor + ChatColor.RED + "\" niet gevonden!");
+                        sender.sendMessage(ChatColor.RED + "Floor \"" + ChatColor.YELLOW + floor + ChatColor.RED + "\" not found!");
                         return true;
                     }
                 }
                 if (args.length < i + 1) {
-                    sender.sendMessage(ChatColor.RED + "Geen vloernaam opgegeven!");
+                    sender.sendMessage(ChatColor.RED + "No floor name given!");
                     sendHelp(sender, "floor");
                     return true;
                 }
@@ -414,11 +414,11 @@ class VLCE implements CommandExecutor {
                     sb.append(" ").append(args[i]);
                 int ret = plugin.api.renameFloor(lift, floor, sb.toString());
                 if (ret == -4)
-                    sender.sendMessage(ChatColor.RED + "Je kunt geen 2 vloeren met dezelfde naam aanmaken!");
+                    sender.sendMessage(ChatColor.RED + "You can't create 2 floors with the same name!");
                 else if (ret < 0)
                     sender.sendMessage(ChatColor.RED + "Internal error!");
                 else
-                    sender.sendMessage(ChatColor.GREEN + "Vloernaam aangepast!");
+                    sender.sendMessage(ChatColor.GREEN + "Floor name changed!");
             } else {
                 sendHelp(sender, "floor");
                 return true;
@@ -427,7 +427,7 @@ class VLCE implements CommandExecutor {
         } else if (args[0].equalsIgnoreCase("input")) {
             String player = ((Player) sender).getName();
             if (!plugin.editors.containsKey(player)) {
-                sender.sendMessage(ChatColor.RED + "Start editor modus eerst!");
+                sender.sendMessage(ChatColor.RED + "Start editor mode first!");
                 return true;
             }
             if (args.length < 2) {
@@ -441,7 +441,7 @@ class VLCE implements CommandExecutor {
                     Block b = ((Player) sender).getLocation().getBlock();
                     Floor f = new Floor(b.getY() - 1, b.getWorld().getName());
                     if (!lift.floors.containsValue(f)) {
-                        sender.sendMessage(ChatColor.RED + "Automatische vloerdetectie niet gevonden!");
+                        sender.sendMessage(ChatColor.RED + "Automatic floor detection failed!");
                         return true;
                     }
                     for (Entry < String, Floor > e: lift.floors.entrySet()) {
@@ -459,29 +459,29 @@ class VLCE implements CommandExecutor {
                     }
                     floor = sb.toString();
                     if (!lift.floors.containsKey(floor)) {
-                        sender.sendMessage(ChatColor.RED + "Vloer \"" + ChatColor.YELLOW + floor + ChatColor.RED + "\" niet gevonden!");
+                        sender.sendMessage(ChatColor.RED + "Floor \"" + ChatColor.YELLOW + floor + ChatColor.RED + "\" not found!");
                         return true;
                     }
                 }
                 if (plugin.inputEdits.containsKey(player) ||
                     plugin.inputRemoves.contains(player)) {
-                    sender.sendMessage(ChatColor.RED + "Je bent nog een input aan het aanpassen!");
+                    sender.sendMessage(ChatColor.RED + "You're still adjusting an input!");
                     return true;
                 }
                 plugin.inputEdits.put(player, floor);
-                sender.sendMessage(ChatColor.GOLD + "Klik nu met rechtermuisknop op het inputblok!");
+                sender.sendMessage(ChatColor.GOLD + "Now right click on the input block!");
             } else if (args[1].equalsIgnoreCase("del")) {
                 if (lift.inputs.isEmpty()) {
-                    sender.sendMessage(ChatColor.RED + "Er is geen input om te verwijderen!");
+                    sender.sendMessage(ChatColor.RED + "There is no input to delete!");
                     return true;
                 }
                 if (plugin.inputEdits.containsKey(player) ||
                     plugin.inputRemoves.contains(player)) {
-                    sender.sendMessage(ChatColor.RED + "Je bent nog een input aan het aanpassen!");
+                    sender.sendMessage(ChatColor.RED + "You're still adjusting an input!");
                     return true;
                 }
                 plugin.inputRemoves.add(player);
-                sender.sendMessage(ChatColor.GOLD + "Klik nu met rechtermuisknop op het inputblok!");
+                sender.sendMessage(ChatColor.GOLD + "Now right click on the input block!");
             } else {
                 sendHelp(sender, "input");
                 return true;
@@ -490,7 +490,7 @@ class VLCE implements CommandExecutor {
         } else if (args[0].equalsIgnoreCase("offline")) {
             String player = ((Player) sender).getName();
             if (!plugin.editors.containsKey(player)) {
-                sender.sendMessage(ChatColor.RED + "Start editor modus eerst!");
+                sender.sendMessage(ChatColor.RED + "Start editor mode first!");
                 return true;
             }
             if (args.length < 2) {
@@ -501,23 +501,23 @@ class VLCE implements CommandExecutor {
             if (args[1].equalsIgnoreCase("add")) {
                 if (plugin.offlineEdits.contains(player) ||
                     plugin.offlineRemoves.contains(player)) {
-                    sender.sendMessage(ChatColor.RED + "Je bent nog een offline input aan het aanpassen!");
+                    sender.sendMessage(ChatColor.RED + "You're still adjusting an offline input!");
                     return true;
                 }
                 plugin.offlineEdits.add(player);
-                sender.sendMessage(ChatColor.GOLD + "Klik nu met rechtermuisknop op het offline inputblok!");
+                sender.sendMessage(ChatColor.GOLD + "Now right-click on the offline input block!");
             } else if (args[1].equalsIgnoreCase("del")) {
                 if (lift.offlineInputs.isEmpty()) {
-                    sender.sendMessage(ChatColor.RED + "Geen offline inputblok om te verwijderen!");
+                    sender.sendMessage(ChatColor.RED + "No offline input block to remove!");
                     return true;
                 }
                 if (plugin.offlineEdits.contains(player) ||
                     plugin.offlineRemoves.contains(player)) {
-                    sender.sendMessage(ChatColor.RED + "Je bent nog een offline input aan het aanpassen!");
+                    sender.sendMessage(ChatColor.RED + "You're still adjusting an offline input!");
                     return true;
                 }
                 plugin.offlineRemoves.add(player);
-                sender.sendMessage(ChatColor.GOLD + "Klik nu met rechtermuisknop op het offline inputblok!");
+                sender.sendMessage(ChatColor.GOLD + "Now right-click on the offline input block!");
             } else {
                 sendHelp(sender, "offline");
                 return true;
@@ -526,11 +526,11 @@ class VLCE implements CommandExecutor {
         } else if (args[0].equalsIgnoreCase("rename")) {
             String player = ((Player) sender).getName();
             if (!plugin.editors.containsKey(player)) {
-                sender.sendMessage(ChatColor.RED + "Start editor modus eerst!");
+                sender.sendMessage(ChatColor.RED + "Start editor mode first!");
                 return true;
             }
             if (args.length < 2) {
-                sender.sendMessage(ChatColor.RED + "Geen naam opgegeven!");
+                sender.sendMessage(ChatColor.RED + "No name given!");
                 return true;
             }
             StringBuilder sb = new StringBuilder(args[1]);
@@ -544,24 +544,24 @@ class VLCE implements CommandExecutor {
             String nn = sb.toString().trim();
             plugin.api.renameLift(plugin.editors.get(player), nn);
             plugin.editors.put(player, nn);
-            sender.sendMessage(ChatColor.GREEN + "Lift hernoemd!");
+            sender.sendMessage(ChatColor.GREEN + "Elevator renamed!");
             //PLAYERS ONLY
         } else if (args[0].equalsIgnoreCase("build") && args.length == 1) {
             String player = ((Player) sender).getName();
             //Niet worldedit modus!
             if (!plugin.editors.containsKey(player)) {
-                sender.sendMessage(ChatColor.RED + "Start editor modus eerst!");
+                sender.sendMessage(ChatColor.RED + "Start editor mode first!");
                 return true;
             }
             if (plugin.builder.contains(player)) {
                 plugin.builder.remove(player);
                 plugin.api.sortLiftBlocks(plugin.editors.get(player));
-                sender.sendMessage(ChatColor.GREEN + "Bouwmodus uitgezet!");
+                sender.sendMessage(ChatColor.GREEN + "Construction mode disabled!");
                 return true;
             }
             plugin.builder.add(player);
-            sender.sendMessage(ChatColor.GOLD + "Klik nu met rechtermuisknop op de liftblokken!");
-            sender.sendMessage(ChatColor.GOLD + "Doe daarna /v10lift build om het op te slaan!");
+            sender.sendMessage(ChatColor.GOLD + "Now click with your right mouse button on the elevator blocks!");
+            sender.sendMessage(ChatColor.GOLD + "Then do /v10lift build to save it!");
             //PLAYERS ONLY
         } else if (args[0].equalsIgnoreCase("build") &&
             args.length == 2 &&
@@ -569,7 +569,7 @@ class VLCE implements CommandExecutor {
             String player = ((Player) sender).getName();
             //Worldedit modus
             if (!plugin.editors.containsKey(player)) {
-                sender.sendMessage(ChatColor.RED + "Start editor modus eerst!");
+                sender.sendMessage(ChatColor.RED + "Start editor mode first!");
                 return true;
             }
             if (!plugin.builder.contains(player)) {
@@ -578,7 +578,7 @@ class VLCE implements CommandExecutor {
             Player p = (Player) sender;
             Selection s = WGMan.wep.getSelection(p);
             if (s == null) {
-                sender.sendMessage(ChatColor.RED + "Start editor modus eerst!");
+                sender.sendMessage(ChatColor.RED + "Start editor mode first!");
                 return true;
             }
             Vector pos1 = s.getNativeMinimumPoint();
@@ -587,8 +587,6 @@ class VLCE implements CommandExecutor {
             Cuboid cuboid = new Cuboid(pos1, pos2, p.getWorld());
             List < Block > blocks = cuboid.blockList();
 
-            Bukkit.getLogger().severe("WG DING!");
-            Bukkit.getLogger().severe(blocks.toString());
             Boolean gelukt = true;
             Integer misluktaantal = 0;
             for (Block bl: blocks) {
@@ -597,7 +595,6 @@ class VLCE implements CommandExecutor {
             		continue;
             	}
 
-                Bukkit.getLogger().severe("Stap 6");
                 int ret = plugin.api.switchBlockAtLift(plugin.editors.get(player), bl);
                 switch (ret) {
                     case 0:
@@ -617,22 +614,22 @@ class VLCE implements CommandExecutor {
                 }
             }
             if (gelukt == true && misluktaantal == 0) {
-                sender.sendMessage(ChatColor.GREEN + "Blokken toegevoegd aan de lift.");
+                sender.sendMessage(ChatColor.GREEN + "Blocks added to the elevator.");
             } else {
-                sender.sendMessage(ChatColor.GREEN + "Blokken niet (allemaal) toegevoegd aan de lift.");
+                sender.sendMessage(ChatColor.GREEN + "Blocks not (all) added to the elevator.");
             }
 
             if (plugin.builder.contains(player)) {
                 plugin.builder.remove(player);
                 plugin.api.sortLiftBlocks(plugin.editors.get(player));
-                sender.sendMessage(ChatColor.GREEN + "Bouwmodus uitgezet!");
+                sender.sendMessage(ChatColor.GREEN + "Construction mode disabled!");
                 return true;
             }
             //PLAYERS ONLY
         } else if (args[0].equalsIgnoreCase("rope")) {
             String player = ((Player) sender).getName();
             if (!plugin.editors.containsKey(player)) {
-                sender.sendMessage(ChatColor.RED + "Start editor modus eerst!");
+                sender.sendMessage(ChatColor.RED + "Start editor mode first!");
                 return true;
             }
             if (args.length < 2) {
@@ -641,29 +638,29 @@ class VLCE implements CommandExecutor {
             }
             if (args[1].equalsIgnoreCase("add")) {
                 if (plugin.ropeEdits.containsKey(player) || plugin.ropeRemoves.contains(player)) {
-                    sender.sendMessage(ChatColor.RED + "Je bent de noodtrap nog aan het aanpassen.");
+                    sender.sendMessage(ChatColor.RED + "You're still adjusting the emergency stairs.");
                     return true;
                 }
                 plugin.ropeEdits.put(player, null);
-                sender.sendMessage(ChatColor.GOLD + "Klik nu met rechtermuisknop op het begin en het einde van de noodtrap.");
+                sender.sendMessage(ChatColor.GOLD + "Now right-click on the beginning and the end of the emergency stairs.");
             } else if (args[1].equalsIgnoreCase("del")) {
                 if (plugin.ropeEdits.containsKey(player) || plugin.ropeRemoves.contains(player)) {
-                    sender.sendMessage(ChatColor.RED + "Je bent de noodtrap nog aan het aanpassen.");
+                    sender.sendMessage(ChatColor.RED + "You're still adjusting the emergency stairs.");
                     return true;
                 }
                 plugin.ropeRemoves.add(player);
-                sender.sendMessage(ChatColor.GOLD + "Klik nu met rechtermuisknop op de noodtrap.");
+                sender.sendMessage(ChatColor.GOLD + "Now click with your right mouse button on the emergency stairs.");
             }
             //PLAYERS ONLY
         } else if (args[0].equalsIgnoreCase("door")) {
             String player = ((Player) sender).getName();
             if (!plugin.editors.containsKey(player)) {
-                sender.sendMessage(ChatColor.RED + "Start editor modus eerst!");
+                sender.sendMessage(ChatColor.RED + "Start editor mode first!");
                 return true;
             }
             if (plugin.doorEdits.containsKey(player)) {
                 plugin.doorEdits.remove(player);
-                sender.sendMessage(ChatColor.RED + "Deur editor modus uitgezet!");
+                sender.sendMessage(ChatColor.RED + "Door editor mode disabled!");
                 return true;
             }
             Lift lift = plugin.lifts.get(plugin.editors.get(player));
@@ -672,7 +669,7 @@ class VLCE implements CommandExecutor {
                 Location loc = ((Player) sender).getLocation();
                 Floor f = new Floor(loc.getBlockY() - 1, loc.getWorld().getName());
                 if (!lift.floors.containsValue(f)) {
-                    sender.sendMessage(ChatColor.RED + "Automatische vloerdetectie mislukt!");
+                    sender.sendMessage(ChatColor.RED + "Automatic floor detection failed!");
                     return true;
                 }
                 for (Entry < String, Floor > e: lift.floors.entrySet()) {
@@ -690,18 +687,18 @@ class VLCE implements CommandExecutor {
                 }
                 floor = sb.toString();
                 if (!lift.floors.containsKey(floor)) {
-                    sender.sendMessage(ChatColor.RED + "Vloer \"" + ChatColor.YELLOW + floor + ChatColor.RED + "\" niet gevonden!");
+                    sender.sendMessage(ChatColor.RED + "Floor \"" + ChatColor.YELLOW + floor + ChatColor.RED + "\" not found!");
                     return true;
                 }
             }
             plugin.doorEdits.put(player, floor);
-            sender.sendMessage(ChatColor.GOLD + "Klik nu met rechtermuisknop op de deurblokken!");
-            sender.sendMessage(ChatColor.GOLD + "Doe daarna /v10lift door om het op te slaan!");
+            sender.sendMessage(ChatColor.GOLD + "Now right-click on the door blocks!");
+            sender.sendMessage(ChatColor.GOLD + "Then do /v10lift door to save it!");
             //PLAYERS ONLY
         } else if (args[0].equalsIgnoreCase("whitelist")) {
             String player = ((Player) sender).getName();
             if (!plugin.editors.containsKey(player)) {
-                sender.sendMessage(ChatColor.RED + "Start editor modus eerst!");
+                sender.sendMessage(ChatColor.RED + "Start editor mode first!");
                 return true;
             }
             if (args.length < 3) {
@@ -720,7 +717,7 @@ class VLCE implements CommandExecutor {
                 Block b = ((Player) sender).getLocation().getBlock();
                 Floor f = new Floor(b.getY() - 1, b.getWorld().getName());
                 if (!lift.floors.containsValue(f)) {
-                    sender.sendMessage(ChatColor.RED + "Automatische vloerdetectie mislukt!");
+                    sender.sendMessage(ChatColor.RED + "Automatic floor detection failed!");
                     return true;
                 }
                 for (Entry < String, Floor > e: lift.floors.entrySet()) {
@@ -738,26 +735,26 @@ class VLCE implements CommandExecutor {
                 }
                 floor = sb.toString();
                 if (!lift.floors.containsKey(floor)) {
-                    sender.sendMessage(ChatColor.RED + "Vloer \"" + ChatColor.YELLOW + floor + ChatColor.RED + "\" niet gevonden!");
+                    sender.sendMessage(ChatColor.RED + "Floor \"" + ChatColor.YELLOW + floor + ChatColor.RED + "\" not found!");
                     return true;
                 }
             }
             Floor f = lift.floors.get(floor);
             if (args[1].equalsIgnoreCase("add")) {
                 if (f.whitelist.contains(wpn))
-                    sender.sendMessage(ChatColor.RED + "Whitelist bevat " + wpn + " al!");
+                    sender.sendMessage(ChatColor.RED + "Whitelist already contains " + wpn + "!");
                 else {
                     f.whitelist.add(wpn);
                     sender.sendMessage(ChatColor.GREEN + wpn + " toegevoegd!");
                 }
             } else if (args[1].equalsIgnoreCase("del")) {
                 if (!f.whitelist.contains(wpn))
-                    sender.sendMessage(ChatColor.RED + "Whitelist bevat " + wpn + " nog niet!");
+                    sender.sendMessage(ChatColor.RED + "Whitelist doesn't include " + wpn + " yet!");
                 else {
                     f.whitelist.remove(wpn);
                     sender.sendMessage(ChatColor.GREEN + wpn + " verwijderd!");
                     if (f.whitelist.isEmpty())
-                        sender.sendMessage(ChatColor.YELLOW + "Whitelist is leeg, daarom wordt hij uitgezet!");
+                        sender.sendMessage(ChatColor.YELLOW + "Whitelist is empty, that's why it's being turned off!");
                 }
             }
             //PLAYERS ONLY
@@ -765,7 +762,7 @@ class VLCE implements CommandExecutor {
             String player = ((Player) sender).getName();
             if (args.length < 2) {
                 plugin.whoisReq.add(player);
-                sender.sendMessage(ChatColor.GOLD + "Klik nu met rechtermuisknop op het blok dat u wilt checken!");
+                sender.sendMessage(ChatColor.GOLD + "Now right click on the block you want to check!");
             } else {
                 String lift;
                 if (args.length == 2)
@@ -777,7 +774,7 @@ class VLCE implements CommandExecutor {
                     lift = sb.toString();
                 }
                 if (!plugin.api.isLift(lift))
-                    sender.sendMessage(ChatColor.RED + "Lift \"" + ChatColor.GOLD + lift + ChatColor.RED + "\" niet gevonden!");
+                    sender.sendMessage(ChatColor.RED + "Lift \"" + ChatColor.GOLD + lift + ChatColor.RED + "\" not found!");
                 else
                     plugin.api.sendLiftInfo(((Player) sender), lift);
             }
@@ -785,7 +782,7 @@ class VLCE implements CommandExecutor {
         } else if (args[0].equalsIgnoreCase("speed")) {
             String player = ((Player) sender).getName();
             if (!plugin.editors.containsKey(player)) {
-                sender.sendMessage(ChatColor.RED + "Start editor modus eerst!");
+                sender.sendMessage(ChatColor.RED + "Start editor mode first!");
                 return true;
             }
             if (args.length < 2) {
@@ -797,40 +794,40 @@ class VLCE implements CommandExecutor {
                 lift.speed = Integer.parseInt(args[1]);
                 if (lift.speed < 1)
                     lift.speed = 1;
-                sender.sendMessage(ChatColor.GREEN + "Nieuwe liftsnelheid: " + lift.speed);
+                sender.sendMessage(ChatColor.GREEN + "New lift speed: " + lift.speed);
             } catch (NumberFormatException e) {
-                sender.sendMessage(ChatColor.RED + "Verkeerde snelheid: " + args[1]);
+                sender.sendMessage(ChatColor.RED + "Wrong speed: " + args[1]);
                 sendHelp(sender, "speed");
             }
             //PLAYERS ONLY SPEED COMMAND
         } else if (args[0].equalsIgnoreCase("sound")) {
             String player = ((Player) sender).getName();
             if (!plugin.editors.containsKey(player)) {
-                sender.sendMessage(ChatColor.RED + "Start editor modus eerst!");
+                sender.sendMessage(ChatColor.RED + "Start editor mode first!");
                 return true;
             }
             Lift lift = plugin.lifts.get(plugin.editors.get(player));
             if (lift.sound) {
                 lift.sound = false;
-                sender.sendMessage(ChatColor.GOLD + "Sound modus uitgezet!");
+                sender.sendMessage(ChatColor.GOLD + "Sound mode turned off!");
             } else {
                 lift.sound = true;
-                sender.sendMessage(ChatColor.GOLD + "Sound modus aangezet!");
+                sender.sendMessage(ChatColor.GOLD + "Sound mode turned on!");
             }
             //PLAYERS ONLY
         } else if (args[0].equalsIgnoreCase("realistic")) {
             String player = ((Player) sender).getName();
             if (!plugin.editors.containsKey(player)) {
-                sender.sendMessage(ChatColor.RED + "Start editor modus eerst!");
+                sender.sendMessage(ChatColor.RED + "Start editor mode first!");
                 return true;
             }
             Lift lift = plugin.lifts.get(plugin.editors.get(player));
             if (lift.realistic) {
                 lift.realistic = false;
-                sender.sendMessage(ChatColor.GOLD + "Realistische modus uitgezet!");
+                sender.sendMessage(ChatColor.GOLD + "Realistic mode turned off!");
             } else {
                 lift.realistic = true;
-                sender.sendMessage(ChatColor.GOLD + "Realistische modus aangezet!");
+                sender.sendMessage(ChatColor.GOLD + "Realistic mode turned on!");
             }
         } else if (args[0].equalsIgnoreCase("help")) {
             if (args.length < 2)
@@ -839,7 +836,7 @@ class VLCE implements CommandExecutor {
                 sendHelp(sender, args[1]);
         } else if (args[0].equalsIgnoreCase("reset")) {
             if (!plugin.hasPerm(sender, "v10lift.admin")) {
-                sender.sendMessage(ChatColor.RED + "Jij mag dit commando niet uitvoeren!");
+                sender.sendMessage(ChatColor.RED + "You can't execute this command!");
                 return true;
             }
             System.out.print("DEBUG: Resetting");
@@ -862,10 +859,10 @@ class VLCE implements CommandExecutor {
             plugin.load();
             System.out.print("DEBUG: Saving config...");
             plugin.saveConfig();
-            sender.sendMessage(ChatColor.YELLOW + "Gereset!");
+            sender.sendMessage(ChatColor.YELLOW + "Resetted!");
         } else if (args[0].equalsIgnoreCase("repair")) {
             if (!plugin.hasPerm(sender, "v10lift.repair.master")) {
-                sender.sendMessage(ChatColor.RED + "Jij mag dit commando niet uitvoeren!");
+                sender.sendMessage(ChatColor.RED + "You can't execute this command!");
                 return true;
             }
             if (args.length < 2) {
@@ -877,24 +874,24 @@ class VLCE implements CommandExecutor {
                 sb.append(" ").append(args[i]);
             String lift = sb.toString();
             if (!plugin.lifts.containsKey(lift)) {
-                sender.sendMessage(ChatColor.RED + "Lift \"" + ChatColor.YELLOW + lift + ChatColor.RED + "\" bestaat niet!");
+                sender.sendMessage(ChatColor.RED + "Lift \"" + ChatColor.YELLOW + lift + ChatColor.RED + "\" doesn't exists!");
                 return true;
             }
             if (!plugin.api.isDefective(lift)) {
-                sender.sendMessage("Deze lift is niet kapot!");
+                sender.sendMessage("This elevator isn't broken!");
                 return true;
             }
             Player p = (Player) sender;
             if (p.getGameMode() == GameMode.SURVIVAL && plugin.masterAmount > 0) {
                 PlayerInventory pi = p.getInventory();
                 if (!pi.contains(new ItemStack(plugin.masterItem), plugin.masterAmount)) {
-                    sender.sendMessage(ChatColor.RED + "Je hebt nodig: " + plugin.masterAmount + "x " + plugin.masterItem.toString().replace('_', ' ').toLowerCase());
+                    sender.sendMessage(ChatColor.RED + "You need: " + plugin.masterAmount + "x " + plugin.masterItem.toString().replace('_', ' ').toLowerCase());
                     return true;
                 }
                 pi.remove(new ItemStack(plugin.masterItem, plugin.masterAmount));
             }
             plugin.api.setDefective(lift, false);
-            sender.sendMessage(ChatColor.GREEN + "Lift gerepareerd!");
+            sender.sendMessage(ChatColor.GREEN + "Elevator repaired!");
         } else
             sendHelp(sender);
         return true;

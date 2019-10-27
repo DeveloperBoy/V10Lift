@@ -41,17 +41,17 @@ class VLL implements Listener {
             return;
         Player player = event.getPlayer();
         if (lines[1].isEmpty()) {
-            player.sendMessage(ChatColor.RED + "Geen liftnaam opgegeven!");
+            player.sendMessage(ChatColor.RED + "No lift name given!");
             return;
         }
         if (!plugin.lifts.containsKey(lines[1])) {
-            player.sendMessage(ChatColor.RED + "Lift \"" + ChatColor.YELLOW + lines[1] + ChatColor.RED + "\" bestaat niet!");
+            player.sendMessage(ChatColor.RED + "Lift \"" + ChatColor.YELLOW + lines[1] + ChatColor.RED + "\" doesn't exists!");
             event.setCancelled(true);
             return;
         }
         Lift lift = plugin.lifts.get(lines[1]);
         if (!lift.owners.contains(player.getName()) && !plugin.hasPerm(player, "v10lift.admin")) {
-            player.sendMessage(ChatColor.RED + "Jij mag dit niet doen!");
+            player.sendMessage(ChatColor.RED + "You can't do this!");
             event.setCancelled(true);
             return;
         }
@@ -65,7 +65,7 @@ class VLL implements Listener {
 
         Block block = event.getBlock();
         lift.signs.add(new LiftSign(block.getWorld().getName(), block.getX(), block.getY(), block.getZ(), type, (byte) 0));
-        player.sendMessage(ChatColor.GREEN + "Lift sign aangemaakt!");
+        player.sendMessage(ChatColor.GREEN + "Lift sign created!");
     }
 
     @SuppressWarnings("unlikely-arg-type")
@@ -73,7 +73,7 @@ class VLL implements Listener {
     public void onBlockBreak(BlockBreakEvent event) {
         Block block = event.getBlock();
         if (plugin.api.isRope(block)) {
-            event.getPlayer().sendMessage(ChatColor.RED + "Jij mag dit niet doen! (Verwijder de noodtrap eerst!)");
+            event.getPlayer().sendMessage(ChatColor.RED + "You can't do this! (Remove the emergency stairs first!)");
             event.setCancelled(true);
             return;
         }
@@ -82,14 +82,14 @@ class VLL implements Listener {
         for (Entry < String, Lift > e: plugin.lifts.entrySet()) {
             lift = e.getValue();
             if (lift.blocks.contains(tlb)) {
-            	event.getPlayer().sendMessage(ChatColor.RED + "Jij mag dit niet doen! (Verwijder de lift eerst!)");
+            	event.getPlayer().sendMessage(ChatColor.RED + "You can't do this! (Remove the lift first!)");
                 event.setCancelled(true);
                 return;
             }
 
             for (Floor f: lift.floors.values()) {
                 if (f.doorBlocks.contains(tlb)) {
-                	event.getPlayer().sendMessage(ChatColor.RED + "Jij mag dit niet doen! (Verwijder de deur eerst!)");
+                	event.getPlayer().sendMessage(ChatColor.RED + "You can't do this! (Remove the door first!)");
                     event.setCancelled(true);
                     return;
                 }
@@ -101,11 +101,11 @@ class VLL implements Listener {
                 continue;
             Player p = event.getPlayer();
             if (!lift.owners.contains(p.getName()) && !plugin.hasPerm(p, "v10lift.admin")) {
-                p.sendMessage(ChatColor.RED + "Jij mag dit niet doen!");
+                p.sendMessage(ChatColor.RED + "You can't do this!");
                 event.setCancelled(true);
             } else {
                 lift.signs.remove(tlb);
-                event.getPlayer().sendMessage(ChatColor.YELLOW + "Lift sign verwijderd!");
+                event.getPlayer().sendMessage(ChatColor.YELLOW + "Lift sign removed!");
             }
             return;
         }
@@ -118,7 +118,7 @@ class VLL implements Listener {
         Material button = event.getClickedBlock().getType();
         if(action == Action.RIGHT_CLICK_BLOCK && (button == Material.STONE_BUTTON || 
         		button == Material.STONE_BUTTON || button == Material.LEVER || button == Material.WOOD_BUTTON)) {
-        	Bukkit.getLogger().severe("[" + plugin.getName() + " Debug] Het was een button!");
+        	Bukkit.getLogger().severe("[" + plugin.getName() + " Debug] It was a button!");
         	String world = block.getWorld().getName();
 	        int x = block.getX();
 	        int y = block.getY();
@@ -130,22 +130,22 @@ class VLL implements Listener {
 	                    x == lb.x &&
 	                    y == lb.y &&
 	                    z == lb.z) {
-	                	Bukkit.getLogger().severe("[" + plugin.getName() + " Debug] Locatie komt overeen met een lift!");
+	                	Bukkit.getLogger().severe("[" + plugin.getName() + " Debug] Location matches an elevator!");
 	                    if (lb.active == false) {
 	                        lb.active = true;
 	                        plugin.api.setOffline(e.getKey(), lb.active);
-	                        Bukkit.getLogger().severe("[" + plugin.getName() + " Debug] De lever heeft de lift op offline gezet!");
+	                        Bukkit.getLogger().severe("[" + plugin.getName() + " Debug] The lever has put the elevator on offline!");
 	                    } else {
 	                    	lb.active = false;
 	                    	plugin.api.setOffline(e.getKey(), lb.active);
-	                    	Bukkit.getLogger().severe("[" + plugin.getName() + " Debug] De lever heeft de lift op niet-offline gezet!");
+	                    	Bukkit.getLogger().severe("[" + plugin.getName() + " Debug] The lever has put the elevator on non-offline!");
 	                    }
 	                    return;
 	                }
 	            }
 	            lift.offline = false;
 	            if (lift.offline) {
-	            	Bukkit.getLogger().severe("[" + plugin.getName() + " Debug] De lift is offline!");
+	            	Bukkit.getLogger().severe("[" + plugin.getName() + " Debug] The elevator is offline!");
 	                return;
 	            }
 	            for (LiftBlock lb: lift.inputs) {
@@ -153,7 +153,7 @@ class VLL implements Listener {
 	                    x == lb.x &&
 	                    y == lb.y &&
 	                    z == lb.z) {
-	                	Bukkit.getLogger().severe("[" + plugin.getName() + " Debug] De button heeft gewerkt!");
+	                	Bukkit.getLogger().severe("[" + plugin.getName() + " Debug] The button worked!");
                         plugin.api.addToQueue(e.getKey(), lift.floors.get(lb.floor), lb.floor);
 	                    return;
 	                }
@@ -176,13 +176,13 @@ class VLL implements Listener {
             int ret = plugin.api.switchBlockAtLift(plugin.builds.get(pn), event.getClickedBlock());
             switch (ret) {
                 case 0:
-                    player.sendMessage(ChatColor.GREEN + "Blok toegevoegd aan de lift.");
+                    player.sendMessage(ChatColor.GREEN + "Block added to the elevator.");
                     break;
                 case 1:
-                    player.sendMessage(ChatColor.GOLD + "Blok verwijderd van de lift.");
+                    player.sendMessage(ChatColor.GOLD + "Block removed from the elevator.");
                     break;
                 case -2:
-                    player.sendMessage(ChatColor.RED + "Het materiaal \"" + ChatColor.YELLOW + event.getClickedBlock().getType().toString().replace('_', ' ').toLowerCase() + ChatColor.RED + "\" kan niet gebruikt worden!");
+                    player.sendMessage(ChatColor.RED + "The material \"" + ChatColor.YELLOW + event.getClickedBlock().getType().toString().replace('_', ' ').toLowerCase() + ChatColor.RED + "\" cannot be used!");
                     break;
                 default:
                     player.sendMessage(ChatColor.RED + "Internal API error: " + ret);
@@ -195,12 +195,12 @@ class VLL implements Listener {
             Lift lift = plugin.lifts.get(plugin.editors.get(pn));
             event.setCancelled(true);
             if (lift.inputs.contains(tlb)) {
-                player.sendMessage(ChatColor.RED + "Dit blok is al gekozen als een input. Kies een ander blok!");
+                player.sendMessage(ChatColor.RED + "This block has already been chosen as an input. Choose another block!");
                 return;
             }
             lift.inputs.add(tlb);
             plugin.inputEdits.remove(pn);
-            player.sendMessage(ChatColor.GREEN + "Input aangemaakt!");
+            player.sendMessage(ChatColor.GREEN + "Input created!");
         } else if (plugin.inputRemoves.contains(pn)) {
             if (event.getAction() != Action.RIGHT_CLICK_BLOCK)
                 return;
@@ -211,10 +211,10 @@ class VLL implements Listener {
             if (lift.inputs.contains(tlb)) {
                 lift.inputs.remove(tlb);
                 plugin.inputRemoves.remove(pn);
-                player.sendMessage(ChatColor.GREEN + "Input verwijderd!");
+                player.sendMessage(ChatColor.GREEN + "Input removed!");
                 return;
             }
-            player.sendMessage(ChatColor.RED + "Dit blok is geen input. Kies een ander blok!");
+            player.sendMessage(ChatColor.RED + "This block is not an input. Choose another block!");
         } else if (plugin.offlineEdits.contains(pn)) {
             if (event.getAction() != Action.RIGHT_CLICK_BLOCK)
                 return;
@@ -223,12 +223,12 @@ class VLL implements Listener {
             Lift lift = plugin.lifts.get(plugin.editors.get(pn));
             event.setCancelled(true);
             if (lift.offlineInputs.contains(tlb)) {
-                player.sendMessage(ChatColor.RED + "Dit blok is al geregistreerd als een offline input. Kies een ander blok!");
+                player.sendMessage(ChatColor.RED + "This block is already registered as an offline input. Choose another block!");
                 return;
             }
             lift.offlineInputs.add(tlb);
             plugin.offlineEdits.remove(pn);
-            player.sendMessage(ChatColor.GREEN + "Offline input aangemaakt!");
+            player.sendMessage(ChatColor.GREEN + "Offline input created!");
         } else if (plugin.offlineRemoves.contains(pn)) {
             if (event.getAction() != Action.RIGHT_CLICK_BLOCK)
                 return;
@@ -239,10 +239,10 @@ class VLL implements Listener {
             if (lift.offlineInputs.contains(tlb)) {
                 lift.offlineInputs.remove(tlb);
                 plugin.offlineRemoves.remove(pn);
-                player.sendMessage(ChatColor.GREEN + "Offline input verwijderd!");
+                player.sendMessage(ChatColor.GREEN + "Offline input removed!");
                 return;
             }
-            player.sendMessage(ChatColor.RED + "Dit blok is geen offline input. Kies een ander blok!");
+            player.sendMessage(ChatColor.RED + "This block is not an offline input. Choose another block!");
         } else if (plugin.builder.contains(pn)) {
             if (event.getAction() != Action.RIGHT_CLICK_BLOCK)
                 return;
@@ -250,13 +250,13 @@ class VLL implements Listener {
             int ret = plugin.api.switchBlockAtLift(plugin.editors.get(pn), event.getClickedBlock());
             switch (ret) {
                 case 0:
-                    player.sendMessage(ChatColor.GREEN + "Blok toegevoegd aan de lift.");
+                    player.sendMessage(ChatColor.GREEN + "Block added to the elevator.");
                     break;
                 case 1:
-                    player.sendMessage(ChatColor.GOLD + "Blok verwijderd van de lift.");
+                    player.sendMessage(ChatColor.GOLD + "Block removed from the elevator.");
                     break;
                 case -2:
-                    player.sendMessage(ChatColor.RED + "Het materiaal \"" + ChatColor.YELLOW + event.getClickedBlock().toString().replace('_', ' ').toLowerCase() + ChatColor.RED + "\" is niet gesupport!");
+                    player.sendMessage(ChatColor.RED + "The material \"" + ChatColor.YELLOW + event.getClickedBlock().toString().replace('_', ' ').toLowerCase() + ChatColor.RED + "\" is not supported!");
                     break;
                 default:
                     player.sendMessage(ChatColor.RED + "Internal API error: " + ret);
@@ -268,30 +268,30 @@ class VLL implements Listener {
             LiftBlock start = plugin.ropeEdits.get(pn);
             Block now = event.getClickedBlock();
             if (start == null) {
-                player.sendMessage(ChatColor.GOLD + "Klik nu met rechtermuisknop op het einde van de noodtrap!");
+                player.sendMessage(ChatColor.GOLD + "Now click with your right mouse button on the end of the emergency stairs!");
                 plugin.ropeEdits.put(pn, new LiftBlock(now.getWorld().getName(), now.getX(), now.getY(), now.getZ(), null));
             } else if (start.equals(new LiftBlock(now.getWorld().getName(), now.getX(), now.getY(), now.getZ(), null))) {
                 plugin.ropeEdits.put(pn, null);
-                player.sendMessage(ChatColor.GOLD + "Start verwijderd!");
-                player.sendMessage(ChatColor.GOLD + "Klik nu met rechtermuisknop op het einde van de noodtrap!");
+                player.sendMessage(ChatColor.GOLD + "Start removed!");
+                player.sendMessage(ChatColor.GOLD + "Now click with your right mouse button on the end of the emergency stairs!");
             } else {
                 if (start.x != now.getX() || start.z != now.getZ()) {
-                    player.sendMessage(ChatColor.RED + "Een noodtrap mag alleen omhoog gaan!");
+                    player.sendMessage(ChatColor.RED + "An emergency staircase can only go up!");
                     return;
                 }
                 int ret = plugin.api.addRope(plugin.editors.get(pn), plugin.getServer().getWorld(start.world), start.x, now.getY(), start.y, start.z, now.getWorld());
                 switch (ret) {
                     case 0:
-                        player.sendMessage(ChatColor.GREEN + "Noodtrap aangemaakt.");
+                        player.sendMessage(ChatColor.GREEN + "Emergency stage created.");
                         break;
                     case -2:
-                        player.sendMessage(ChatColor.RED + "Een noodtrap mag alleen van hetzelfde materiaal gemaakt zijn.");
+                        player.sendMessage(ChatColor.RED + "An emergency staircase may only be made of the same material.");
                         break;
                     case -3:
-                        player.sendMessage(ChatColor.RED + "Een deel van de noodtrap is al deel van een andere noodtrap.");
+                        player.sendMessage(ChatColor.RED + "Part of the emergency staircase is already part of another emergency staircase.");
                         break;
                     case -4:
-                        player.sendMessage(ChatColor.RED + "De noodtrap is gebouwd van geblackliste blokken.");
+                        player.sendMessage(ChatColor.RED + "The emergency staircase is built of blacklisted blocks.");
                         break;
                     default:
                         player.sendMessage(ChatColor.RED + "Internal API error: " + ret);
@@ -309,7 +309,7 @@ class VLL implements Listener {
             }
             String lift = plugin.editors.get(pn);
             if (!plugin.api.containsRope(lift, block)) {
-                player.sendMessage(ChatColor.RED + "Dit blok is geen deel van de noodtrap.");
+                player.sendMessage(ChatColor.RED + "This block is not part of the emergency staircase.");
                 return;
             }
             plugin.api.removeRope(lift, block);
@@ -330,11 +330,11 @@ class VLL implements Listener {
             Floor floor = lift.floors.get(plugin.doorEdits.get(pn));
             if (floor.doorBlocks.contains(tlb)) {
                 floor.doorBlocks.remove(tlb);
-                player.sendMessage(ChatColor.GOLD + "Deur verwijderd!");
+                player.sendMessage(ChatColor.GOLD + "Door removed!");
                 return;
             }
             floor.doorBlocks.add(tlb);
-            player.sendMessage(ChatColor.GREEN + "Deur aangemaakt!");
+            player.sendMessage(ChatColor.GREEN + "Door created!");
         } else if (plugin.whoisReq.contains(pn)) {
             if (event.getAction() != Action.RIGHT_CLICK_BLOCK)
                 return;
@@ -350,7 +350,7 @@ class VLL implements Listener {
                     return;
                 }
             }
-            player.sendMessage(ChatColor.YELLOW + "Dit blok is geen deel van de lift.");
+            player.sendMessage(ChatColor.YELLOW + "This block is not part of the elevator.");
         } else {
             Action a = event.getAction();
             if (a != Action.RIGHT_CLICK_BLOCK &&
@@ -377,7 +377,7 @@ class VLL implements Listener {
                         int am = is.getAmount();
                         if (is.getType() != plugin.repairItem ||
                             am < plugin.repairAmount) {
-                            player.sendMessage(ChatColor.RED + "Je hebt nodig: " + plugin.repairAmount + "x " + plugin.repairItem.toString().replace('_', ' ').toLowerCase());
+                            player.sendMessage(ChatColor.RED + "You need: " + plugin.repairAmount + "x " + plugin.repairItem.toString().replace('_', ' ').toLowerCase());
                             return;
                         }
                         is.setAmount(am - plugin.repairAmount);
@@ -401,7 +401,7 @@ class VLL implements Listener {
                 Iterator < String > iter = l.floors.keySet().iterator();
                 if (!l.floors.containsKey(f)) {
                     if (!iter.hasNext()) {
-                        player.sendMessage(ChatColor.RED + "Deze lift heeft geen vloeren!");
+                        player.sendMessage(ChatColor.RED + "This elevator has no floors!");
                         return;
                     }
                     f = iter.next();
@@ -423,12 +423,12 @@ class VLL implements Listener {
                 sign.update();
             } else {
                 if (!l.floors.containsKey(f)) {
-                    player.sendMessage(ChatColor.RED + "Vloer niet gevonden!");
+                    player.sendMessage(ChatColor.RED + "Floor not found!");
                     return;
                 }
                 Floor floor = l.floors.get(f);
                 if (!floor.whitelist.isEmpty() && !floor.whitelist.contains(pn.toLowerCase()) && !plugin.hasPerm(player, "v10lift.admin")) {
-                    player.sendMessage(ChatColor.RED + "Jij mag niet naar die vloer toe!");
+                    player.sendMessage(ChatColor.RED + "You can't go to that floor!");
                     event.setCancelled(true);
                     return;
                 }
