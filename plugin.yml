@@ -1,6 +1,6 @@
 name: V10Lift
 main: de.V10lator.V10lift.V10lift
-version: 0.4.14
+version: 0.4.15
 softdepend: [V10verlap, WorldEdit, WorldGuard]
 commands:
   v10lift:
