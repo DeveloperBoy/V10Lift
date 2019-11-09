@@ -8,8 +8,6 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
-import com.sk89q.worldedit.Vector;
-
 public class Cuboid {
 
     private final int xMin;
@@ -41,22 +39,6 @@ public class Cuboid {
         this.zMinCentered = this.zMin + 0.5;
         this.zMaxCentered = this.zMax + 0.5;
     }
-
-    public Cuboid(Vector pos1, Vector pos2, World world) {
-    	this.xMin = Math.min(pos1.getBlockX(), pos2.getBlockX());
-        this.xMax = Math.max(pos1.getBlockX(), pos2.getBlockX());
-        this.yMin = Math.min(pos1.getBlockY(), pos2.getBlockY());
-        this.yMax = Math.max(pos1.getBlockY(), pos2.getBlockY());
-        this.zMin = Math.min(pos1.getBlockZ(), pos2.getBlockZ());
-        this.zMax = Math.max(pos1.getBlockZ(), pos2.getBlockZ());
-        this.world = world;
-        this.xMinCentered = this.xMin + 0.5;
-        this.xMaxCentered = this.xMax + 0.5;
-        this.yMinCentered = this.yMin + 0.5;
-        this.yMaxCentered = this.yMax + 0.5;
-        this.zMinCentered = this.zMin + 0.5;
-        this.zMaxCentered = this.zMax + 0.5;
-	}
 
 	public ArrayList<Block> blockList() {
         final ArrayList<Block> bL = new ArrayList<>(this.getTotalBlockSize());

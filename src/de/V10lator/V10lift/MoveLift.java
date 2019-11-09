@@ -19,7 +19,8 @@ import org.bukkit.entity.Entity;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-@SuppressWarnings("deprecation")
+import de.V10lator.V10lift.API.XMaterial;
+
 class MoveLift implements Runnable {
     private final V10lift plugin;
 
@@ -61,22 +62,21 @@ class MoveLift implements Runnable {
             ft = 64;
 
         //TODO Fix data types
-        antiCopy.add(Material.REDSTONE_TORCH_OFF);
-        antiCopy.add(Material.REDSTONE_TORCH_ON);
-        antiCopy.add(Material.DIODE_BLOCK_ON);
-        antiCopy.add(Material.DIODE_BLOCK_OFF);
-        antiCopy.add(Material.REDSTONE_WIRE);
-        antiCopy.add(Material.STONE_BUTTON);
-        antiCopy.add(Material.TORCH);
-        antiCopy.add(Material.TRAP_DOOR);
-        antiCopy.add(Material.WOOD_PLATE);
-        antiCopy.add(Material.STONE_PLATE);
-        antiCopy.add(Material.SIGN);
-        antiCopy.add(Material.WALL_SIGN);
-        antiCopy.add(Material.RAILS);
-        antiCopy.add(Material.POWERED_RAIL);
-        antiCopy.add(Material.LADDER);
-        antiCopy.add(Material.DETECTOR_RAIL);
+        antiCopy.add(XMaterial.REDSTONE_TORCH.parseMaterial());
+        antiCopy.add(XMaterial.REDSTONE_WALL_TORCH.parseMaterial());
+        antiCopy.add(XMaterial.COMPARATOR.parseMaterial());
+        antiCopy.add(XMaterial.REPEATER.parseMaterial());
+        antiCopy.add(XMaterial.REDSTONE_WIRE.parseMaterial());
+        antiCopy.add(XMaterial.STONE_BUTTON.parseMaterial());
+        antiCopy.add(XMaterial.TORCH.parseMaterial());
+        antiCopy.add(XMaterial.OAK_TRAPDOOR.parseMaterial());
+        antiCopy.add(XMaterial.OAK_PRESSURE_PLATE.parseMaterial());
+        antiCopy.add(XMaterial.STONE_PRESSURE_PLATE.parseMaterial());
+        antiCopy.add(XMaterial.OAK_SIGN.parseMaterial());
+        antiCopy.add(XMaterial.RAIL.parseMaterial());
+        antiCopy.add(XMaterial.POWERED_RAIL.parseMaterial());
+        antiCopy.add(XMaterial.LADDER.parseMaterial());
+        antiCopy.add(XMaterial.DETECTOR_RAIL.parseMaterial());
     }
 
     @SuppressWarnings("unchecked")
@@ -285,8 +285,7 @@ class MoveLift implements Runnable {
                     }
                 }
                 block = world.getBlockAt(lib.x, lib.y, lib.z);
-                block.setType(lib.type, true);
-                block.setData(lib.data);
+                block.setType(lib.type);
                 if (world2 != null)
                     world = world2;
 
@@ -351,8 +350,7 @@ class MoveLift implements Runnable {
                     }
                 }
                 block = s.getWorld(lib.world).getBlockAt(lib.x, lib.y, lib.z);
-                block.setType(lib.type, true);
-                block.setData(lib.data);
+                block.setType(lib.type);
                 lift.blocks.add(lib);
                 if (lib.lines != null) {
                     bs = block.getState();
@@ -449,8 +447,7 @@ class MoveLift implements Runnable {
                     }
                 }
                 block = world.getBlockAt(lib.x, lib.y, lib.z);
-                block.setType(lib.type, true);
-                block.setData(lib.data);
+                block.setType(lib.type);
                 if (plugin.v10vAPI != null) {
                     if (world2 != null) {
                         for (Entity ent: world2.getBlockAt(lib.x, lib.y, lib.z).getChunk().getEntities()) {
@@ -498,8 +495,7 @@ class MoveLift implements Runnable {
                     }
                 }
                 block = s.getWorld(lib.world).getBlockAt(lib.x, lib.y, lib.z);
-                block.setType(lib.type, true);
-                block.setData(lib.data);
+                block.setType(lib.type);
                 lift.blocks.add(lib);
                 if (lib.lines != null) {
                     bs = block.getState();

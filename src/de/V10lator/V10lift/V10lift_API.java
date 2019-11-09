@@ -21,6 +21,8 @@ import org.bukkit.block.Sign;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
+import de.V10lator.V10lift.API.XMaterial;
+
 public class V10lift_API {
     private final V10lift plugin;
 
@@ -31,15 +33,45 @@ public class V10lift_API {
         this.plugin = plugin;
 
         //TODO Add all types!
-        forbidden.add(Material.WOODEN_DOOR);
-        forbidden.add(Material.IRON_DOOR);
-        forbidden.add(Material.BED_BLOCK);
-        forbidden.add(Material.SAPLING);
-        forbidden.add(Material.TNT);
-        forbidden.add(Material.PISTON_STICKY_BASE);
-        forbidden.add(Material.PISTON_BASE);
-        forbidden.add(Material.PISTON_EXTENSION);
-        forbidden.add(Material.PISTON_MOVING_PIECE);
+        forbidden.add(XMaterial.ACACIA_DOOR.parseMaterial());
+        forbidden.add(XMaterial.BIRCH_DOOR.parseMaterial());
+        forbidden.add(XMaterial.DARK_OAK_DOOR.parseMaterial());
+        forbidden.add(XMaterial.IRON_DOOR.parseMaterial());
+        forbidden.add(XMaterial.JUNGLE_DOOR.parseMaterial());
+        forbidden.add(XMaterial.OAK_DOOR.parseMaterial());
+        forbidden.add(XMaterial.SPRUCE_DOOR.parseMaterial());
+        
+        forbidden.add(XMaterial.BLACK_BED.parseMaterial());
+        forbidden.add(XMaterial.BLUE_BED.parseMaterial());
+        forbidden.add(XMaterial.BROWN_BED.parseMaterial());
+        forbidden.add(XMaterial.CYAN_BED.parseMaterial());
+        forbidden.add(XMaterial.GRAY_BED.parseMaterial());
+        forbidden.add(XMaterial.GREEN_BED.parseMaterial());
+        forbidden.add(XMaterial.LIGHT_BLUE_BED.parseMaterial());
+        forbidden.add(XMaterial.LIGHT_GRAY_BED.parseMaterial());
+        forbidden.add(XMaterial.LIME_BED.parseMaterial());
+        forbidden.add(XMaterial.MAGENTA_BED.parseMaterial());
+        forbidden.add(XMaterial.ORANGE_BED.parseMaterial());
+        forbidden.add(XMaterial.PINK_BED.parseMaterial());
+        forbidden.add(XMaterial.PURPLE_BED.parseMaterial());
+        forbidden.add(XMaterial.RED_BED.parseMaterial());
+        forbidden.add(XMaterial.WHITE_BED.parseMaterial());
+        forbidden.add(XMaterial.YELLOW_BED.parseMaterial());
+        
+        forbidden.add(XMaterial.ACACIA_SAPLING.parseMaterial());
+        forbidden.add(XMaterial.BAMBOO_SAPLING.parseMaterial());
+        forbidden.add(XMaterial.BIRCH_SAPLING.parseMaterial());
+        forbidden.add(XMaterial.DARK_OAK_SAPLING.parseMaterial());
+        forbidden.add(XMaterial.JUNGLE_SAPLING.parseMaterial());
+        forbidden.add(XMaterial.OAK_SAPLING.parseMaterial());
+        forbidden.add(XMaterial.SPRUCE_SAPLING.parseMaterial());
+        
+        forbidden.add(XMaterial.TNT.parseMaterial());
+        
+        forbidden.add(XMaterial.PISTON.parseMaterial());
+        forbidden.add(XMaterial.PISTON_HEAD.parseMaterial());
+        forbidden.add(XMaterial.MOVING_PISTON.parseMaterial());
+        forbidden.add(XMaterial.STICKY_PISTON.parseMaterial());
     }
 
     /**
@@ -527,8 +559,7 @@ public class V10lift_API {
 	int addBlockToLift(Set < LiftBlock > blocks, Block block) {
         Material type = block.getType();
         LiftBlock tlb;
-        if (type == Material.SIGN ||
-            type == Material.WALL_SIGN)
+        if (type.toString().contains("SIGN"))
             tlb = new LiftBlock(block.getWorld().getName(), block.getX(), block.getY(), block.getZ(), type, block.getData(), ((Sign) block.getState()).getLines());
         else
             tlb = new LiftBlock(block.getWorld().getName(), block.getX(), block.getY(), block.getZ(), type, block.getData());
@@ -561,8 +592,7 @@ public class V10lift_API {
             return -1;
         Material type = block.getType();
         LiftBlock tlb;
-        if (type == Material.SIGN ||
-            type == Material.WALL_SIGN)
+        if (type.toString().contains("SIGN"))
             tlb = new LiftBlock(block.getWorld().getName(), block.getX(), block.getY(), block.getZ(), type, block.getData(), ((Sign) block.getState()).getLines());
         else
             tlb = new LiftBlock(block.getWorld().getName(), block.getX(), block.getY(), block.getZ(), type, block.getData());
@@ -593,8 +623,7 @@ public class V10lift_API {
         if (forbidden.contains(type))
             return -2;
         LiftBlock tlb;
-        if (type == Material.SIGN ||
-            type == Material.WALL_SIGN)
+        if (type.toString().contains("SIGN"))
             tlb = new LiftBlock(block.getWorld().getName(), block.getX(), block.getY(), block.getZ(), type, block.getData(), ((Sign) block.getState()).getLines());
         else
             tlb = new LiftBlock(block.getWorld().getName(), block.getX(), block.getY(), block.getZ(), type, block.getData());
@@ -1028,7 +1057,6 @@ public class V10lift_API {
         return (lift == null || !plugin.lifts.containsKey(lift)) ? false : closeDoor(plugin.lifts.get(lift));
     }
 
-    @SuppressWarnings("deprecation")
 	boolean closeDoor(Lift lift) {
         boolean blocked = false;
         Server s = plugin.getServer();
@@ -1055,8 +1083,7 @@ public class V10lift_API {
         if (!blocked) {
             for (LiftBlock db: lift.doorOpen.doorBlocks) {
                 block = s.getWorld(db.world).getBlockAt(db.x, db.y, db.z);
-                block.setType(db.type, true);
-                block.setData(db.data);
+                block.setType(db.type);
             }
             lift.doorOpen = null;
             if (lift.doorCloser != null)

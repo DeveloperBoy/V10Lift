@@ -26,7 +26,9 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 
-import de.V10lator.V10lift.API.WGMan;
+import com.sk89q.worldedit.bukkit.WorldEditPlugin;
+
+import de.V10lator.V10lift.API.ConverterUtil;
 import de.V10lator.V10verlap.V10verlap;
 import de.V10lator.V10verlap.V10verlap_API;
 
@@ -57,6 +59,8 @@ public class V10lift extends JavaPlugin {
     private final AtomicBoolean saveLock = new AtomicBoolean(false);
     boolean dontSave = true;
     long doorCloseTime = 5 * 20;
+    public static WorldEditPlugin worldedit;
+    public static ConverterUtil cutil;
     //TODO: List of experimental features...
     /*
      * Since 0.2.2:
@@ -70,11 +74,12 @@ public class V10lift extends JavaPlugin {
 
     @SuppressWarnings("unchecked")
     public void onEnable() {
-    	if (!setupPlugins())
-        {
-          Bukkit.getLogger().severe(String.format("[%s] - Disabled due to no WorldGuard dependency found!", new Object[] { getDescription().getName() }));
-          getServer().getPluginManager().disablePlugin(this);
-          return;
+        if (!setupPlugins()) {
+            Bukkit.getLogger().severe(String.format("[%s] - Disabled due to no WorldGuard dependency found!", new Object[] {
+                getDescription().getName()
+            }));
+            getServer().getPluginManager().disablePlugin(this);
+            return;
         }
         Server server = getServer();
         PluginManager pm = server.getPluginManager();
@@ -187,6 +192,9 @@ public class V10lift extends JavaPlugin {
                 v10vAPI = null;
             }
         }
+        
+        cutil = new ConverterUtil(this);
+        setupPlugins();
 
         pm.registerEvents(new VLL(this), this);
         getCommand("v10lift").setExecutor(new VLCE(this));
@@ -217,8 +225,8 @@ public class V10lift extends JavaPlugin {
         save(false);
         s.getLogger().info("[" + getName() + "] disabled!");
     }
-    
-	void load() {
+
+    void load() {
         Configuration config = getConfig();
 
         signText = config.getString("SignText", "[v10lift]");
@@ -302,23 +310,16 @@ public class V10lift extends JavaPlugin {
     public V10lift_API getAPI() {
         return api;
     }
-    
+
     private boolean setupPlugins() {
-      if (hasWorldGuardOnServer() && hasWorldEditOnServer()) {
-    	  WGMan.setWorldEdit(getServer().getPluginManager().getPlugin("WorldEdit"));
-        WGMan.setWorldGuard(getServer().getPluginManager().getPlugin("WorldGuard"));
-        return true;
-      }
-      return false;
+        if (hasWorldEditOnServer()) {
+            worldedit = (WorldEditPlugin) getServer().getPluginManager().getPlugin("WorldEdit");
+            return true;
+        }
+        return false;
     }
-    
-    private static boolean hasWorldEditOnServer()
-    {
-      return Bukkit.getPluginManager().getPlugin("WorldEdit") != null;
-    }
-    
-    private static boolean hasWorldGuardOnServer()
-    {
-      return Bukkit.getPluginManager().getPlugin("WorldGuard") != null;
+
+    private static boolean hasWorldEditOnServer() {
+        return Bukkit.getPluginManager().getPlugin("WorldEdit") != null;
     }
 }

@@ -116,8 +116,7 @@ class VLL implements Listener {
     	Action action = event.getAction();
     	Block block = event.getClickedBlock();
         Material button = event.getClickedBlock().getType();
-        if(action == Action.RIGHT_CLICK_BLOCK && (button == Material.STONE_BUTTON || 
-        		button == Material.STONE_BUTTON || button == Material.LEVER || button == Material.WOOD_BUTTON)) {
+        if(action == Action.RIGHT_CLICK_BLOCK && (button.toString().contains("_BUTTON") || button == Material.LEVER)) {
         	Bukkit.getLogger().severe("[" + plugin.getName() + " Debug] It was a button!");
         	String world = block.getWorld().getName();
 	        int x = block.getX();

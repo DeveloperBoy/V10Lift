@@ -23,10 +23,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.scheduler.BukkitScheduler;
 
-import com.sk89q.worldedit.Vector;
-import com.sk89q.worldedit.bukkit.selections.Selection;
 import de.V10lator.V10lift.API.Cuboid;
-import de.V10lator.V10lift.API.WGMan;
 
 class VLCE implements CommandExecutor {
     private final V10lift plugin;
@@ -576,15 +573,7 @@ class VLCE implements CommandExecutor {
                 plugin.builder.add(player);
             }
             Player p = (Player) sender;
-            Selection s = WGMan.wep.getSelection(p);
-            if (s == null) {
-                sender.sendMessage(ChatColor.RED + "Start editor mode first!");
-                return true;
-            }
-            Vector pos1 = s.getNativeMinimumPoint();
-            Vector pos2 = s.getNativeMaximumPoint();
-
-            Cuboid cuboid = new Cuboid(pos1, pos2, p.getWorld());
+            Cuboid cuboid = V10lift.cutil.getSelectionAsCuboid(p);
             List < Block > blocks = cuboid.blockList();
 
             Boolean gelukt = true;

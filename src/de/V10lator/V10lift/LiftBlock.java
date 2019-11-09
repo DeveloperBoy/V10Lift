@@ -14,7 +14,6 @@ class LiftBlock implements Comparable < LiftBlock > , Serializable {
 
     //For cabine blocks:
     final Material type;
-    byte data;
     final String[] lines;
 
     //For inputs:
@@ -30,7 +29,6 @@ class LiftBlock implements Comparable < LiftBlock > , Serializable {
         this.y = y;
         this.z = z;
         this.type = null;
-        this.data = 0;
         this.lines = null;
         this.floor = floor;
     }
@@ -41,7 +39,6 @@ class LiftBlock implements Comparable < LiftBlock > , Serializable {
         this.y = y;
         this.z = z;
         this.type = type;
-        this.data = data;
         this.lines = null;
         this.floor = null;
     }
@@ -52,7 +49,6 @@ class LiftBlock implements Comparable < LiftBlock > , Serializable {
         this.y = y;
         this.z = z;
         this.type = type;
-        this.data = data;
         this.lines = lines;
         this.floor = null;
     }
